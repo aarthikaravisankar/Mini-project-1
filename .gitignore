@@ -1,0 +1,60 @@
+# ===================================================
+# 108 Emergency Ambulance Dispatch System .gitignore
+# ===================================================
+
+# Node dependencies
+node_modules/
+*/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vite / Frontend build outputs
+dist/
+dist-ssr/
+*.local
+
+# Java compiled class files (compile via run_backend.bat)
+*.class
+backend-java/bin/
+backend-java/out/
+
+# Python virtual environments & bytecode
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+
+# Sensitive environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# IDE and OS metadata
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archives & database backup dumps
+*.zip
+*.tar.gz
+*.rar
+backup_*.sql
+
+# Local test logs
+*.log
+test_output/
+scratch/
+

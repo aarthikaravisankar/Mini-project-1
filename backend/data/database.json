@@ -1,0 +1,486 @@
+{
+  "ambulances": [
+    {
+      "id": "AMB-108-01",
+      "vehicle_no": "TN-33-G-1081",
+      "type": "Advanced Life Support (ALS)",
+      "driver_name": "Ramesh Kumar",
+      "driver_phone": "+91 98421 10801",
+      "base_station": "Perundurai Bus Stand Hub",
+      "latitude": 11.278,
+      "longitude": 77.584,
+      "status": "En Route to Scene",
+      "assigned_incident_id": "INC-10803",
+      "assigned_incident": {
+        "id": "INC-10803",
+        "location_name": "Chithode Bypass Toll Plaza (NH 544)",
+        "latitude": 11.378,
+        "longitude": 77.671,
+        "incident_type": "Multi-Vehicle Collision",
+        "severity": "High",
+        "caller_phone": "9363744874",
+        "notes": "Registered emergency call at Chithode Bypass Toll Plaza (NH 544)"
+      },
+      "last_updated": "2026-10-11T10:37:56.507292+00:00",
+      "dispatch_time": "2026-10-11T10:37:17.959698+00:00"
+    },
+    {
+      "id": "AMB-108-02",
+      "vehicle_no": "TN-33-G-1082",
+      "type": "Basic Life Support (BLS)",
+      "driver_name": "Senthil Nathan",
+      "driver_phone": "+91 98421 10802",
+      "base_station": "Chithode Bypass Toll Hub",
+      "latitude": 11.378,
+      "longitude": 77.671,
+      "status": "Dispatched",
+      "assigned_incident_id": "INC-10801",
+      "assigned_incident": {
+        "id": "INC-10801",
+        "location_name": "Perundurai Old Bus Stand, Perundurai",
+        "latitude": 11.2785,
+        "longitude": 77.5835,
+        "incident_type": "Road Traffic Accident",
+        "severity": "High",
+        "caller_phone": "9842234567",
+        "notes": "Two-wheeler collision, head injury reported. | Linked Call from 8072584684: Duplicate caller confirming incident at Perundurai Old Bus Stand, Perundurai"
+      },
+      "last_updated": "2026-10-11T11:27:25.659452+00:00",
+      "dispatch_time": "2026-10-11T11:27:25.659202+00:00"
+    },
+    {
+      "id": "AMB-108-03",
+      "vehicle_no": "TN-33-G-1083",
+      "type": "ALS Trauma Unit",
+      "driver_name": "Murugesan P.",
+      "driver_phone": "+91 98421 10803",
+      "base_station": "Erode Railway Station / GH Post",
+      "latitude": 11.34,
+      "longitude": 77.725,
+      "status": "Dispatched",
+      "assigned_incident_id": "INC-10805",
+      "assigned_incident": {
+        "id": "INC-10805",
+        "location_name": "Perundurai Old Bus Stand, Perundurai",
+        "latitude": 11.2785,
+        "longitude": 77.5835,
+        "incident_type": "Road Traffic Accident",
+        "severity": "High",
+        "caller_phone": "98421 98765",
+        "notes": "Registered emergency call at Perundurai Old Bus Stand, Perundurai"
+      },
+      "last_updated": "2026-10-11T11:27:38.141427+00:00",
+      "dispatch_time": "2026-10-11T11:27:38.141402+00:00"
+    },
+    {
+      "id": "AMB-108-04",
+      "vehicle_no": "TN-33-G-1084",
+      "type": "Neonatal / BLS",
+      "driver_name": "Karthik Raja",
+      "driver_phone": "+91 98421 10804",
+      "base_station": "Thindal Ring Road Post",
+      "latitude": 11.325,
+      "longitude": 77.675,
+      "status": "Dispatched",
+      "assigned_incident_id": "INC-10804",
+      "assigned_incident": {
+        "id": "INC-10804",
+        "location_name": "Perundurai Old Bus Stand, Perundurai",
+        "latitude": 11.2785,
+        "longitude": 77.5835,
+        "incident_type": "Respiratory Distress",
+        "severity": "High",
+        "caller_phone": "98421 98765",
+        "notes": "Separate emergency call confirmed by operator"
+      },
+      "last_updated": "2026-10-11T10:39:43.062926+00:00",
+      "dispatch_time": "2026-10-11T10:39:43.062899+00:00"
+    },
+    {
+      "id": "AMB-108-05",
+      "vehicle_no": "TN-33-G-1085",
+      "type": "Basic Life Support (BLS)",
+      "driver_name": "Vijay Anand",
+      "driver_phone": "+91 98421 10805",
+      "base_station": "Modakkurichi / Solar Post",
+      "latitude": 11.295,
+      "longitude": 77.74,
+      "status": "Maintenance",
+      "assigned_incident_id": null,
+      "assigned_incident": null,
+      "last_updated": "2026-10-11T10:36:40.319546+00:00"
+    }
+  ],
+  "incidents": [
+    {
+      "id": "INC-10806",
+      "caller_phone": "98421 98765",
+      "caller_name": "Citizen Caller",
+      "location_name": "Perundurai Old Bus Stand, Perundurai",
+      "latitude": 11.2785,
+      "longitude": 77.5835,
+      "incident_type": "Road Traffic Accident",
+      "severity": "High",
+      "ambulances_required": 1,
+      "status": "Registered",
+      "assigned_ambulance_id": null,
+      "assigned_ambulance_details": null,
+      "created_at": "2026-10-11T11:31:26.090931+00:00",
+      "notes": "Separate emergency call confirmed by operator",
+      "caller_logs": [
+        {
+          "caller_phone": "98421 98765",
+          "caller_name": "Citizen Caller",
+          "timestamp": "2026-10-11T11:31:26.090931+00:00",
+          "note": "Primary registration"
+        }
+      ]
+    },
+    {
+      "id": "INC-10805",
+      "caller_phone": "98421 98765",
+      "caller_name": "Citizen Caller",
+      "location_name": "Perundurai Old Bus Stand, Perundurai",
+      "latitude": 11.2785,
+      "longitude": 77.5835,
+      "incident_type": "Road Traffic Accident",
+      "severity": "High",
+      "ambulances_required": 1,
+      "status": "Dispatched",
+      "assigned_ambulance_id": "AMB-108-03",
+      "assigned_ambulance_details": {
+        "vehicle_no": "TN-33-G-1083",
+        "driver_name": "Murugesan P.",
+        "driver_phone": "+91 98421 10803"
+      },
+      "created_at": "2026-10-11T11:26:46.051481+00:00",
+      "notes": "Registered emergency call at Perundurai Old Bus Stand, Perundurai",
+      "caller_logs": [
+        {
+          "caller_phone": "98421 98765",
+          "caller_name": "Citizen Caller",
+          "timestamp": "2026-10-11T11:26:46.051481+00:00",
+          "note": "Primary registration"
+        }
+      ],
+      "dispatched_at": "2026-10-11T11:27:38.141402+00:00"
+    },
+    {
+      "id": "INC-10804",
+      "caller_phone": "98421 98765",
+      "caller_name": "Citizen Caller",
+      "location_name": "Perundurai Old Bus Stand, Perundurai",
+      "latitude": 11.2785,
+      "longitude": 77.5835,
+      "incident_type": "Respiratory Distress",
+      "severity": "High",
+      "ambulances_required": 1,
+      "status": "Dispatched",
+      "assigned_ambulance_id": "AMB-108-04",
+      "assigned_ambulance_details": {
+        "vehicle_no": "TN-33-G-1084",
+        "driver_name": "Karthik Raja",
+        "driver_phone": "+91 98421 10804"
+      },
+      "created_at": "2026-10-11T10:39:29.624272+00:00",
+      "notes": "Separate emergency call confirmed by operator",
+      "caller_logs": [
+        {
+          "caller_phone": "98421 98765",
+          "caller_name": "Citizen Caller",
+          "timestamp": "2026-10-11T10:39:29.624272+00:00",
+          "note": "Primary registration"
+        }
+      ],
+      "dispatched_at": "2026-10-11T10:39:43.062899+00:00"
+    },
+    {
+      "id": "INC-10803",
+      "caller_phone": "9363744874",
+      "caller_name": "Citizen Caller",
+      "location_name": "Chithode Bypass Toll Plaza (NH 544)",
+      "latitude": 11.378,
+      "longitude": 77.671,
+      "incident_type": "Multi-Vehicle Collision",
+      "severity": "High",
+      "ambulances_required": 1,
+      "status": "En Route to Scene",
+      "assigned_ambulance_id": "AMB-108-01",
+      "assigned_ambulance_details": {
+        "vehicle_no": "TN-33-G-1081",
+        "driver_name": "Ramesh Kumar",
+        "driver_phone": "+91 98421 10801"
+      },
+      "created_at": "2026-10-11T10:37:08.265729+00:00",
+      "notes": "Registered emergency call at Chithode Bypass Toll Plaza (NH 544)",
+      "caller_logs": [
+        {
+          "caller_phone": "9363744874",
+          "caller_name": "Citizen Caller",
+          "timestamp": "2026-10-11T10:37:08.265729+00:00",
+          "note": "Primary registration"
+        }
+      ],
+      "dispatched_at": "2026-10-11T10:37:17.959698+00:00"
+    },
+    {
+      "id": "INC-10801",
+      "caller_phone": "9842234567",
+      "caller_name": "Prakash M",
+      "location_name": "Perundurai Old Bus Stand, Perundurai",
+      "latitude": 11.2785,
+      "longitude": 77.5835,
+      "incident_type": "Road Traffic Accident",
+      "severity": "High",
+      "ambulances_required": 1,
+      "status": "Dispatched",
+      "assigned_ambulance_id": "AMB-108-02",
+      "created_at": "2026-10-11T10:30:40.319557+00:00",
+      "notes": "Two-wheeler collision, head injury reported. | Linked Call from 8072584684: Duplicate caller confirming incident at Perundurai Old Bus Stand, Perundurai",
+      "caller_logs": [
+        {
+          "caller_phone": "8072584684",
+          "caller_name": "Citizen Caller",
+          "timestamp": "2026-10-11T10:39:12.174132+00:00",
+          "note": "Linked call: Duplicate caller confirming incident at Perundurai Old Bus Stand, Perundurai"
+        }
+      ],
+      "assigned_ambulance_details": {
+        "vehicle_no": "TN-33-G-1082",
+        "driver_name": "Senthil Nathan",
+        "driver_phone": "+91 98421 10802"
+      },
+      "dispatched_at": "2026-10-11T11:27:25.659202+00:00"
+    },
+    {
+      "id": "INC-10802",
+      "caller_phone": "9443312345",
+      "caller_name": "Revathi S",
+      "location_name": "Kongu Engineering College Gate 2, Perundurai",
+      "latitude": 11.272,
+      "longitude": 77.607,
+      "incident_type": "Severe Trauma / Fracture",
+      "severity": "Medium",
+      "ambulances_required": 1,
+      "status": "Registered",
+      "assigned_ambulance_id": null,
+      "created_at": "2026-10-11T10:33:40.319557+00:00",
+      "notes": "Pedestrian slip with ankle and knee trauma."
+    }
+  ],
+  "hospitals": [
+    {
+      "id": "HOSP-01",
+      "name": "Govt Medical College Hospital & IRT, Perundurai",
+      "location_name": "Sanatorium, Perundurai, Erode District",
+      "latitude": 11.2652,
+      "longitude": 77.5855,
+      "emergency_beds": 45,
+      "icu_beds": 19,
+      "oxygen_beds": 35,
+      "total_beds": 120,
+      "contact_phone": "+91 4294 220912",
+      "type": "Government Medical College / Trauma Care",
+      "simulated": true
+    },
+    {
+      "id": "HOSP-02",
+      "name": "Erode Government Headquarters Hospital (GH)",
+      "location_name": "Brough Road, Erode",
+      "latitude": 11.341,
+      "longitude": 77.728,
+      "emergency_beds": 50,
+      "icu_beds": 22,
+      "oxygen_beds": 40,
+      "total_beds": 150,
+      "contact_phone": "+91 424 225 8333",
+      "type": "District Headquarters Hospital",
+      "simulated": true
+    },
+    {
+      "id": "HOSP-03",
+      "name": "Lotus Hospital & Research Centre",
+      "location_name": "Poondurai Road, Kollampalayam, Erode",
+      "latitude": 11.3325,
+      "longitude": 77.7245,
+      "emergency_beds": 24,
+      "icu_beds": 12,
+      "oxygen_beds": 20,
+      "total_beds": 75,
+      "contact_phone": "+91 424 228 2828",
+      "type": "Multi-Speciality & Cardiac Care",
+      "simulated": true
+    },
+    {
+      "id": "HOSP-04",
+      "name": "Care 24 Hospital / Maruthi Medical Center",
+      "location_name": "Perundurai Road, Near Collectorate, Erode",
+      "latitude": 11.3392,
+      "longitude": 77.7058,
+      "emergency_beds": 20,
+      "icu_beds": 8,
+      "oxygen_beds": 15,
+      "total_beds": 60,
+      "contact_phone": "+91 424 226 2266",
+      "type": "24/7 Emergency & Critical Care",
+      "simulated": true
+    },
+    {
+      "id": "HOSP-05",
+      "name": "Sudha Hospitals (Trauma & Critical Care)",
+      "location_name": "Perundurai Road, Erode",
+      "latitude": 11.3435,
+      "longitude": 77.7112,
+      "emergency_beds": 18,
+      "icu_beds": 10,
+      "oxygen_beds": 16,
+      "total_beds": 55,
+      "contact_phone": "+91 424 226 5500",
+      "type": "Trauma & Multispeciality",
+      "simulated": true
+    },
+    {
+      "id": "HOSP-06",
+      "name": "Thangam Hospital & Emergency Center",
+      "location_name": "Bhavani Road, Perundurai",
+      "latitude": 11.275,
+      "longitude": 77.592,
+      "emergency_beds": 16,
+      "icu_beds": 6,
+      "oxygen_beds": 12,
+      "total_beds": 40,
+      "contact_phone": "+91 4294 221234",
+      "type": "Emergency Care & Surgical Unit",
+      "simulated": true
+    }
+  ],
+  "trips": [
+    {
+      "trip_id": "TRIP-10801",
+      "incident_id": "INC-10799",
+      "incident_type": "Cardiac Arrest",
+      "ambulance_id": "AMB-108-01",
+      "vehicle_no": "TN-33-G-1081",
+      "driver_name": "Ramesh Kumar",
+      "caller_phone": "9789012345",
+      "patient_location": "Bhavani Road, Perundurai",
+      "hospital_name": "Govt Medical College Hospital & IRT, Perundurai",
+      "dispatch_time": "2026-10-11T08:21:40.319623+00:00",
+      "pickup_time": "2026-10-11T08:36:40.319623+00:00",
+      "completion_time": "2026-10-11T09:06:40.319623+00:00",
+      "duration_minutes": 45,
+      "distance_km": 6.8,
+      "outcome": "Patient safely admitted to ICU"
+    },
+    {
+      "trip_id": "TRIP-10802",
+      "incident_id": "INC-10800",
+      "incident_type": "Pregnancy / Emergency Labor",
+      "ambulance_id": "AMB-108-03",
+      "vehicle_no": "TN-33-G-1083",
+      "driver_name": "Murugesan P.",
+      "caller_phone": "9944056789",
+      "patient_location": "Thindal Hill Road, Erode",
+      "hospital_name": "Erode Government Headquarters Hospital (GH)",
+      "dispatch_time": "2026-10-11T06:26:40.319623+00:00",
+      "pickup_time": "2026-10-11T06:46:40.319623+00:00",
+      "completion_time": "2026-10-11T07:21:40.319623+00:00",
+      "duration_minutes": 55,
+      "distance_km": 8.4,
+      "outcome": "Safe delivery unit admission"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "NOTIF-13",
+      "title": "New Incident INC-10806",
+      "message": "Registered: Road Traffic Accident at Perundurai Old Bus Stand, Perundurai (High Priority)",
+      "type": "urgent",
+      "timestamp": "2026-10-11T11:31:26.094498+00:00"
+    },
+    {
+      "id": "NOTIF-12",
+      "title": "Dispatch Alert: AMB-108-03",
+      "message": "TN-33-G-1083 dispatched to Perundurai Old Bus Stand, Perundurai for Road Traffic Accident.",
+      "type": "urgent",
+      "timestamp": "2026-10-11T11:27:38.149988+00:00"
+    },
+    {
+      "id": "NOTIF-11",
+      "title": "Dispatch Alert: AMB-108-02",
+      "message": "TN-33-G-1082 dispatched to Perundurai Old Bus Stand, Perundurai for Road Traffic Accident.",
+      "type": "urgent",
+      "timestamp": "2026-10-11T11:27:25.669165+00:00"
+    },
+    {
+      "id": "NOTIF-10",
+      "title": "New Incident INC-10805",
+      "message": "Registered: Road Traffic Accident at Perundurai Old Bus Stand, Perundurai (High Priority)",
+      "type": "urgent",
+      "timestamp": "2026-10-11T11:26:46.058692+00:00"
+    },
+    {
+      "id": "NOTIF-9",
+      "title": "Bed Update: Govt Medical College Hosp...",
+      "message": "Emergency: 45, ICU: 19, O2: 35",
+      "type": "info",
+      "timestamp": "2026-10-11T10:40:36.875325+00:00"
+    },
+    {
+      "id": "NOTIF-8",
+      "title": "Dispatch Alert: AMB-108-04",
+      "message": "TN-33-G-1084 dispatched to Perundurai Old Bus Stand, Perundurai for Respiratory Distress.",
+      "type": "urgent",
+      "timestamp": "2026-10-11T10:39:43.068940+00:00"
+    },
+    {
+      "id": "NOTIF-7",
+      "title": "New Incident INC-10804",
+      "message": "Registered: Respiratory Distress at Perundurai Old Bus Stand, Perundurai (High Priority)",
+      "type": "urgent",
+      "timestamp": "2026-10-11T10:39:29.629087+00:00"
+    },
+    {
+      "id": "NOTIF-6",
+      "title": "Call Linked to INC-10801",
+      "message": "Additional caller 8072584684 linked to incident INC-10801.",
+      "type": "info",
+      "timestamp": "2026-10-11T10:39:12.177822+00:00"
+    },
+    {
+      "id": "NOTIF-5",
+      "title": "Ambulance Dispatched & Driver Accepted",
+      "message": "Driver Ramesh Kumar (TN-33-G-1081) has accepted the dispatch for INC-10803!",
+      "type": "driver_accepted",
+      "timestamp": "2026-10-11T10:37:56.503049+00:00"
+    },
+    {
+      "id": "NOTIF-4",
+      "title": "Dispatch Alert: AMB-108-01",
+      "message": "TN-33-G-1081 dispatched to Chithode Bypass Toll Plaza (NH 544) for Multi-Vehicle Collision.",
+      "type": "urgent",
+      "timestamp": "2026-10-11T10:37:17.972769+00:00"
+    },
+    {
+      "id": "NOTIF-3",
+      "title": "Dispatch Alert: AMB-108-01",
+      "message": "TN-33-G-1081 dispatched to Chithode Bypass Toll Plaza (NH 544) for Multi-Vehicle Collision.",
+      "type": "urgent",
+      "timestamp": "2026-10-11T10:37:15.429771+00:00"
+    },
+    {
+      "id": "NOTIF-2",
+      "title": "New Incident INC-10803",
+      "message": "Registered: Multi-Vehicle Collision at Chithode Bypass Toll Plaza (NH 544) (High Priority)",
+      "type": "urgent",
+      "timestamp": "2026-10-11T10:37:08.276229+00:00"
+    },
+    {
+      "id": "NOTIF-01",
+      "title": "System Initialized",
+      "message": "108 Emergency Ambulance Dispatch System online for Perundurai & Erode region.",
+      "type": "info",
+      "timestamp": "2026-10-11T10:36:40.319704+00:00"
+    }
+  ]
+}
