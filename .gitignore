@@ -14,10 +14,12 @@ dist/
 dist-ssr/
 *.local
 
-# Java compiled class files (compile via run_backend.bat)
+# Java compiled class files & Maven target (compile via run_backend.bat or mvn)
 *.class
 backend-java/bin/
 backend-java/out/
+backend-java/target/
+target/
 
 # Python virtual environments & bytecode
 __pycache__/

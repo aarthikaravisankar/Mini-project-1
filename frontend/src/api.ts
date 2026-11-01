@@ -233,3 +233,56 @@ export async function cleanSession(): Promise<any> {
   return res.json();
 }
 
+export async function loginUser(credentials: {
+  username?: string;
+  identifier?: string;
+  password: string;
+  role?: string;
+}): Promise<any> {
+  const res = await fetch(`${API_BASE}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials)
+  });
+  if (!res.ok) throw new Error('Login failed: Invalid credentials or role');
+  return res.json();
+}
+
+export async function fetchDrivers(): Promise<any[]> {
+  const res = await fetch(`${API_BASE}/drivers`);
+  if (!res.ok) throw new Error('Failed to fetch drivers');
+  return res.json();
+}
+
+export async function fetchDriver(driverId: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/drivers/${driverId}`);
+  if (!res.ok) throw new Error('Failed to fetch driver');
+  return res.json();
+}
+
+export async function fetchRoute(start: [number, number], end: [number, number]): Promise<{
+  distance_km: number;
+  eta_minutes: number;
+  route_coordinates: [number, number][];
+}> {
+  const res = await fetch(`${API_BASE}/routes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      start_lat: start[0],
+      start_lon: start[1],
+      end_lat: end[0],
+      end_lon: end[1]
+    })
+  });
+  if (!res.ok) throw new Error('Failed to calculate route');
+  return res.json();
+}
+
+export async function fetchHospitalBeds(hospitalId: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/hospitals/${hospitalId}/beds`);
+  if (!res.ok) throw new Error('Failed to fetch hospital beds');
+  return res.json();
+}
+
+

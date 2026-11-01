@@ -51,6 +51,7 @@ public class Server {
             String path = exchange.getRequestURI().getPath();
             String query = exchange.getRequestURI().getRawQuery();
             Map<String, String> queryParams = parseQueryParams(query);
+            System.out.println("[API] " + method + " " + path);
 
             try {
                 if ("/".equals(path)) {
@@ -192,9 +193,52 @@ public class Server {
                     return;
                 }
 
-                if (path.startsWith("/api/hospitals/") && path.endsWith("/beds") && "PUT".equals(method)) {
+                if (path.startsWith("/api/hospitals/") && path.endsWith("/beds")) {
                     String hospId = path.substring("/api/hospitals/".length(), path.length() - "/beds".length());
-                    handleHospitalBedUpdate(exchange, hospId);
+                    if ("PUT".equalsIgnoreCase(method)) {
+                        handleHospitalBedUpdate(exchange, hospId);
+                        return;
+                    } else if ("GET".equalsIgnoreCase(method)) {
+                        handleGetHospitalBeds(exchange, hospId);
+                        return;
+                    }
+                }
+
+                if (("/api/login".equalsIgnoreCase(path) || "/api/login/".equalsIgnoreCase(path) || "/api/auth/login".equalsIgnoreCase(path) || "/api/auth/login/".equalsIgnoreCase(path)) && "POST".equalsIgnoreCase(method)) {
+                    handleLogin(exchange);
+                    return;
+                }
+
+                if (("/api/users".equalsIgnoreCase(path) || "/api/users/".equalsIgnoreCase(path)) && "GET".equalsIgnoreCase(method)) {
+                    List<Models.User> users = db.getUsers();
+                    List<Map<String, Object>> out = new ArrayList<>();
+                    for (Models.User u : users) out.add(u.toMap());
+                    sendJson(exchange, 200, out);
+                    return;
+                }
+
+                if (("/api/drivers".equalsIgnoreCase(path) || "/api/drivers/".equalsIgnoreCase(path)) && "GET".equalsIgnoreCase(method)) {
+                    List<Models.Driver> drivers = db.getDrivers();
+                    List<Map<String, Object>> out = new ArrayList<>();
+                    for (Models.Driver d : drivers) out.add(d.toMap());
+                    sendJson(exchange, 200, out);
+                    return;
+                }
+
+                if (path.startsWith("/api/drivers/") && "GET".equalsIgnoreCase(method)) {
+                    String dId = path.substring("/api/drivers/".length());
+                    if (dId.endsWith("/")) dId = dId.substring(0, dId.length() - 1);
+                    Models.Driver d = db.getDriver(dId);
+                    if (d == null) {
+                        sendError(exchange, 404, "Driver not found: " + dId);
+                    } else {
+                        sendJson(exchange, 200, d.toMap());
+                    }
+                    return;
+                }
+
+                if (("/api/routes".equalsIgnoreCase(path) || "/api/routes/".equalsIgnoreCase(path)) && ("GET".equalsIgnoreCase(method) || "POST".equalsIgnoreCase(method))) {
+                    handleCalculateRoute(exchange, method, queryParams);
                     return;
                 }
 
@@ -681,6 +725,90 @@ public class Server {
             sendJson(exchange, 200, resp);
         }
 
+        private void handleGetHospitalBeds(HttpExchange exchange, String hospId) throws IOException {
+            Models.Hospital h = db.getHospital(hospId);
+            if (h == null) {
+                sendError(exchange, 404, "Hospital not found");
+                return;
+            }
+            Map<String, Object> beds = new LinkedHashMap<>();
+            beds.put("hospital_id", h.id);
+            beds.put("hospital_name", h.name);
+            beds.put("emergency_beds", h.emergencyBeds);
+            beds.put("icu_beds", h.icuBeds);
+            beds.put("oxygen_beds", h.oxygenBeds);
+            beds.put("total_beds", h.totalBeds);
+            sendJson(exchange, 200, beds);
+        }
+
+        private void handleLogin(HttpExchange exchange) throws IOException {
+            String body = readBody(exchange);
+            Map<String, Object> req = JsonUtil.parseMap(body);
+
+            String username = getString(req, "username", "");
+            if (username.isEmpty()) username = getString(req, "identifier", "");
+            if (username.isEmpty()) username = getString(req, "ambulance_id", "");
+            if (username.isEmpty()) username = getString(req, "hospital_id", "");
+
+            String password = getString(req, "password", "");
+            String role = getString(req, "role", "");
+
+            Map<String, Object> user = db.authenticateUser(username, password, role);
+            if (user == null) {
+                sendError(exchange, 401, "Invalid credentials or unauthorized role access.");
+                return;
+            }
+
+            Map<String, Object> resp = new LinkedHashMap<>();
+            resp.put("status", "success");
+            resp.put("message", "Authentication successful.");
+            resp.put("token", "cad-token-" + System.currentTimeMillis());
+            resp.put("user", user);
+            sendJson(exchange, 200, resp);
+        }
+
+        private void handleCalculateRoute(HttpExchange exchange, String method, Map<String, String> queryParams) throws IOException {
+            double startLat = 0, startLon = 0, endLat = 0, endLon = 0;
+            if ("GET".equals(method)) {
+                startLat = getDouble(queryParams, "start_lat", 11.2780);
+                startLon = getDouble(queryParams, "start_lon", 77.5840);
+                endLat = getDouble(queryParams, "end_lat", 11.3410);
+                endLon = getDouble(queryParams, "end_lon", 77.7280);
+            } else {
+                String body = readBody(exchange);
+                Map<String, Object> req = JsonUtil.parseMap(body);
+                startLat = getDouble(req, "start_lat", getDouble(req, "start_latitude", 11.2780));
+                startLon = getDouble(req, "start_lon", getDouble(req, "start_longitude", 77.5840));
+                endLat = getDouble(req, "end_lat", getDouble(req, "end_latitude", 11.3410));
+                endLon = getDouble(req, "end_lon", getDouble(req, "end_longitude", 77.7280));
+            }
+
+            double distKm = Haversine.distanceKm(startLat, startLon, endLat, endLon);
+            double etaMins = Math.round(((distKm / 45.0) * 60.0 + 2.0) * 10.0) / 10.0;
+            if (etaMins < 3.0) etaMins = 3.0;
+
+            List<List<Double>> waypoints = new ArrayList<>();
+            waypoints.add(Arrays.asList(startLat, startLon));
+            int steps = 6;
+            for (int i = 1; i < steps; i++) {
+                double fraction = (double) i / steps;
+                double interpLat = startLat + (endLat - startLat) * fraction;
+                double interpLon = startLon + (endLon - startLon) * fraction;
+                double curveOffset = Math.sin(fraction * Math.PI) * 0.0032;
+                waypoints.add(Arrays.asList(interpLat + curveOffset, interpLon - curveOffset * 0.45));
+            }
+            waypoints.add(Arrays.asList(endLat, endLon));
+
+            Map<String, Object> resp = new LinkedHashMap<>();
+            resp.put("status", "success");
+            resp.put("start", Arrays.asList(startLat, startLon));
+            resp.put("destination", Arrays.asList(endLat, endLon));
+            resp.put("distance_km", distKm);
+            resp.put("eta_minutes", etaMins);
+            resp.put("route_coordinates", waypoints);
+            sendJson(exchange, 200, resp);
+        }
+
         private void handleListTrips(HttpExchange exchange, Map<String, String> queryParams) throws IOException {
             String ambId = queryParams.get("ambulance_id");
             String incType = queryParams.get("incident_type");
@@ -754,12 +882,14 @@ public class Server {
             return map;
         }
 
-        private String getString(Map<String, Object> m, String key, String def) {
+        private String getString(Map<?, ?> m, String key, String def) {
+            if (m == null) return def;
             Object v = m.get(key);
             return v != null ? v.toString() : def;
         }
 
-        private double getDouble(Map<String, Object> m, String key, double def) {
+        private double getDouble(Map<?, ?> m, String key, double def) {
+            if (m == null) return def;
             Object v = m.get(key);
             if (v instanceof Number) return ((Number) v).doubleValue();
             if (v instanceof String) {
@@ -768,7 +898,8 @@ public class Server {
             return def;
         }
 
-        private int getInt(Map<String, Object> m, String key, int def) {
+        private int getInt(Map<?, ?> m, String key, int def) {
+            if (m == null) return def;
             Object v = m.get(key);
             if (v instanceof Number) return ((Number) v).intValue();
             if (v instanceof String) {

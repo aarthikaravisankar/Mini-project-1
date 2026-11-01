@@ -24,6 +24,12 @@ if errorlevel 1 (
 
 if not exist "backend-java\bin" mkdir "backend-java\bin"
 
+REM Free port 8001 if already in use by a previous instance
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8001 ^| findstr LISTENING 2^>nul') do (
+    echo [INFO] Releasing port 8001 (Stopping PID %%a)...
+    taskkill /F /PID %%a >nul 2>nul
+)
+
 echo.
 echo [1/2] Compiling Java Backend with MySQL JDBC Connector...
 "%JAVAC_CMD%" -encoding UTF-8 -cp "backend-java/lib/*" -d backend-java/bin backend-java/src/com/ambulance108/*.java

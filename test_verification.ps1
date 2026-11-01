@@ -5,13 +5,35 @@ Write-Host "=========================================================="
 Write-Host "Starting Emergency Ambulance Dispatch System Verification"
 Write-Host "=========================================================="
 
+# Compile Java Backend
+Write-Host "Compiling Java backend..."
+$javacExe = "C:\Program Files\Java\jdk-21.0.12.1\bin\javac.exe"
+& $javacExe -encoding UTF-8 -cp "$workingDir/backend-java/lib/*" -d "$workingDir/backend-java/bin" (Get-ChildItem "$workingDir/backend-java/src/com/ambulance108/*.java").FullName
+if ($LASTEXITCODE -ne 0) {
+    throw "Compilation failed!"
+}
+Write-Host "Compilation complete."
+
+# Kill any previous process on port 8001
+Get-NetTCPConnection -LocalPort 8001 -State Listen -ErrorAction SilentlyContinue | ForEach-Object {
+    Write-Host "Terminating previous process on port 8001 (PID: $($_.OwningProcess))..."
+    Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue
+}
+Start-Sleep -Milliseconds 800
+
 # Start Java Server process
 $javaExe = "C:\Program Files\Java\jdk-21.0.12.1\bin\java.exe"
 $cp = "backend-java/bin;backend-java/lib/*"
+$serverOutLog = Join-Path $workingDir "test_server_out.log"
+$serverErrLog = Join-Path $workingDir "test_server_err.log"
+if (Test-Path $serverOutLog) { Remove-Item -Force $serverOutLog }
+if (Test-Path $serverErrLog) { Remove-Item -Force $serverErrLog }
 
 $proc = Start-Process -FilePath $javaExe `
     -ArgumentList "-cp `"$cp`" com.ambulance108.Server" `
     -WorkingDirectory $workingDir `
+    -RedirectStandardOutput $serverOutLog `
+    -RedirectStandardError $serverErrLog `
     -PassThru
 Write-Host "Started Java backend server with PID: $($proc.Id)"
 
@@ -155,8 +177,69 @@ try {
     }
     Write-Host "PASS: ERODE-HOSP-01 beds independently updated in MySQL. Other hospitals unaffected!" -ForegroundColor Green
 
+    # 8. Verify Authentication & Role Logins API
+    Write-Host "`n--- TEST 8: Role Authentication API (Control Room, Driver, Hospital) ---"
+    $crLoginBody = @{ role = "control_room"; password = "108" } | ConvertTo-Json
+    $crLoginResp = Invoke-RestMethod -Uri "http://localhost:8001/api/login" -Method Post -Body $crLoginBody -ContentType "application/json"
+    if ($crLoginResp.status -ne 'success') {
+        throw "Control room login failed!"
+    }
+    Write-Host "  Control Room login success: $($crLoginResp.user.full_name) ($($crLoginResp.user.role))"
+
+    $drvLoginBody = @{ username = "driver101"; password = "driver123"; role = "driver" } | ConvertTo-Json
+    $drvLoginResp = Invoke-RestMethod -Uri "http://localhost:8001/api/login" -Method Post -Body $drvLoginBody -ContentType "application/json"
+    if ($drvLoginResp.status -ne 'success' -or $drvLoginResp.user.username -ne 'driver101') {
+        throw "Driver login failed!"
+    }
+    Write-Host "  Driver login success: $($drvLoginResp.user.full_name) -> $($drvLoginResp.user.ambulance_id)"
+
+    $hospLoginBody = @{ identifier = "ERODE-HOSP-01"; password = "hospital123"; role = "hospital" } | ConvertTo-Json
+    $hospLoginResp = Invoke-RestMethod -Uri "http://localhost:8001/api/login" -Method Post -Body $hospLoginBody -ContentType "application/json"
+    if ($hospLoginResp.status -ne 'success') {
+        throw "Hospital desk login failed!"
+    }
+    Write-Host "  Hospital login success: $($hospLoginResp.user.full_name)"
+    Write-Host "PASS: Role-based authentication verified across Control Room, Driver, and Hospital portals." -ForegroundColor Green
+
+    # 9. Verify Drivers API
+    Write-Host "`n--- TEST 9: Dedicated Drivers API ---"
+    $driversJson = Invoke-RestMethod -Uri "http://localhost:8001/api/drivers" -Method Get
+    Write-Host "Total drivers returned: $($driversJson.Count)"
+    if ($driversJson.Count -ne 7) {
+        throw "Expected exactly 7 drivers, got $($driversJson.Count)"
+    }
+    $singleDriver = Invoke-RestMethod -Uri "http://localhost:8001/api/drivers/DRV-101" -Method Get
+    if ($singleDriver.name -ne 'Murugan R.') {
+        throw "Expected DRV-101 to be Murugan R., got $($singleDriver.name)"
+    }
+    Write-Host "PASS: Dedicated drivers API correctly returns all 7 drivers with assigned ambulances." -ForegroundColor Green
+
+    # 10. Verify Routes API
+    Write-Host "`n--- TEST 10: Routing & Road Waypoints API ---"
+    $routeBody = @{
+        start_latitude = 11.2780
+        start_longitude = 77.5840
+        end_latitude = 11.3410
+        end_longitude = 77.7280
+    } | ConvertTo-Json
+    $routeResp = Invoke-RestMethod -Uri "http://localhost:8001/api/routes" -Method Post -Body $routeBody -ContentType "application/json"
+    if ($routeResp.status -ne 'success' -or $routeResp.distance_km -le 0 -or $routeResp.route_coordinates.Count -lt 2) {
+        throw "Route calculation failed!"
+    }
+    Write-Host "  Calculated route: $($routeResp.distance_km) km, ETA: $($routeResp.eta_minutes) mins, Waypoints: $($routeResp.route_coordinates.Count)"
+    Write-Host "PASS: Road routing and waypoint generation verified." -ForegroundColor Green
+
+    # 11. Verify Hospital Bed Query API
+    Write-Host "`n--- TEST 11: Specific Hospital Bed Query API ---"
+    $bedResp = Invoke-RestMethod -Uri "http://localhost:8001/api/hospitals/ERODE-HOSP-01/beds" -Method Get
+    if ($bedResp.emergency_beds -ne $newErBeds) {
+        throw "Expected emergency beds $newErBeds, got $($bedResp.emergency_beds)"
+    }
+    Write-Host "  ERODE-HOSP-01 beds: ER=$($bedResp.emergency_beds), ICU=$($bedResp.icu_beds), O2=$($bedResp.oxygen_beds), Total=$($bedResp.total_beds)"
+    Write-Host "PASS: Hospital bed endpoint returned verified database counts." -ForegroundColor Green
+
     Write-Host "`n=========================================================="
-    Write-Host "ALL VERIFICATION TESTS PASSED SUCCESSFULLY!" -ForegroundColor Green
+    Write-Host "ALL 11 VERIFICATION TESTS PASSED SUCCESSFULLY!" -ForegroundColor Green
     Write-Host "=========================================================="
 
 } finally {
@@ -164,5 +247,13 @@ try {
     if ($proc -and -not $proc.HasExited) {
         $proc.Kill()
         $proc.WaitForExit()
+    }
+    if (Test-Path $serverOutLog) {
+        Write-Host "`n--- SERVER STDOUT TAIL ---"
+        Get-Content $serverOutLog -Tail 30
+    }
+    if (Test-Path $serverErrLog) {
+        Write-Host "`n--- SERVER STDERR TAIL ---"
+        Get-Content $serverErrLog -Tail 30
     }
 }

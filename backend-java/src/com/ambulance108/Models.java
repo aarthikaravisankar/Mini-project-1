@@ -371,4 +371,68 @@ public class Models {
             return n;
         }
     }
+
+    public static class User {
+        public int userId;
+        public String username;
+        public String fullName;
+        public String role; // operator, driver, hospital, admin
+        public String phone;
+        public String createdAt;
+
+        public Map<String, Object> toMap() {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("user_id", userId);
+            m.put("username", username);
+            m.put("full_name", fullName);
+            m.put("role", role);
+            m.put("phone", phone);
+            m.put("created_at", createdAt);
+            return m;
+        }
+    }
+
+    public static class Driver {
+        public int driverId;
+        public String driverCode;
+        public String name;
+        public String phone;
+        public String licenseNumber;
+        public String status;
+        public String ambulanceId;
+        public String vehicleNo;
+        public String baseStation;
+
+        public Map<String, Object> toMap() {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("driver_id", driverId);
+            m.put("driver_code", driverCode);
+            m.put("name", name);
+            m.put("phone", phone);
+            m.put("license_number", licenseNumber);
+            m.put("status", status);
+            m.put("ambulance_id", ambulanceId);
+            m.put("vehicle_no", vehicleNo);
+            m.put("base_station", baseStation);
+            return m;
+        }
+    }
+
+    public static class RouteInfo {
+        public double distanceKm;
+        public double estimatedMinutes;
+        public List<double[]> waypoints = new ArrayList<>();
+
+        public Map<String, Object> toMap() {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("distance_km", distanceKm);
+            m.put("estimated_minutes", estimatedMinutes);
+            List<List<Double>> coords = new ArrayList<>();
+            for (double[] pt : waypoints) {
+                coords.add(Arrays.asList(pt[0], pt[1]));
+            }
+            m.put("route_coordinates", coords);
+            return m;
+        }
+    }
 }
